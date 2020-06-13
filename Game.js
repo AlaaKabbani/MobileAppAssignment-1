@@ -1,62 +1,59 @@
 const GameState = Object.freeze({
-    WELCOMING:   Symbol("welcoming"),
-    FLAT:  Symbol("flat"),
-    WAIT: Symbol("wait"),
-    MANSION: Symbol("mansion"),
-    BUTLER: Symbol("butler"),
-    TOAST: Symbol("toast")
+    WELCOMING: Symbol("welcoming"),
+    PAIN: Symbol("pain"),
+    CAR: Symbol("car"),
+    EMERGENCY: Symbol("emergency"),
+    TRIANGLE: Symbol("triage"),
 });
 
-module.exports = class Game{
-    constructor(){
+module.exports = class Game {
+    constructor() {
         this.stateCur = GameState.WELCOMING;
     }
-    
-    makeAMove(sInput)
-    {
+
+    makeAMove(sInput) {
         let sReply = "";
-        switch(this.stateCur){
+        switch (this.stateCur) {
             case GameState.WELCOMING:
-                sReply = "It is a dark and rainy night. Bang! You have a flat tire. Too bad you don't have a spare. Do you WAIT or GO to the spooky mansion for help?";
-                this.stateCur = GameState.FLAT;
+                sReply = "You are out skateboarding on your driveway. Suddenly you lose your balance and do a 360 flip landing on your arm. Your arm hurts and upon inspection looks broken. Do you CALL a friend to take you to the emergency room and risk getting COVID-19 or WAIT to see if it is just a bruise?";
+                this.stateCur = GameState.PAIN;
                 break;
-            case GameState.FLAT:
-                if(sInput.toLowerCase().match("wait")){
-                    sReply = "The road is deserted. After 1 hour there is still no help. Do you keep Waiting or do you go to the house?";
-                }else{
-                    sReply ="On the door is a large knocker. Do you knock or run back to your car to wait?";
-                    this.stateCur = GameState.MANSION;
+            case GameState.PAIN:
+                if (sInput.toLowerCase().match("wait")) {
+                    sReply = "You go inside and ice your arm, but the pain only gets worse and you can't move your fingers. Do you continue to WAIT or CALL that friend?";
+                } else {
+                    sReply = "Your friend arrives but neither you nor he has a mask to wear. Do you ENTER the car or GO back inside your house?";
+                    this.stateCur = GameState.CAR;
                 }
                 break;
-            case GameState.MANSION:
-                if(sInput.toLowerCase().match("knock")){
-                    sReply = "The door opens and you are greeted by a hunch-back butler. He asks you to come in. Do you go in or run back to the car?"
-                    this.stateCur = GameState.BUTLER;
-                }else{
-                    sReply = "The road is deserted. After 1 hour there is still no help. Do you keep Waiting or do you go to the house?";
-                    this.stateCur = GameState.FLAT;
-
+            case GameState.CAR:
+                if (sInput.toLowerCase().match("enter")) {
+                    sReply = "You enter the car and 15 minutes later you arrive at the hospital emergency room entrance and see a huge crowd, do you RISK it and enter the emergency room or go to see your friend BOB who has done a first aid course?"
+                    this.stateCur = GameState.EMERGENCY;
+                } else {
+                    sReply = "That arm keeps getting worse, do you WAIT or CALL your friend?";
+                    this.stateCur = GameState.PAIN;
                 }
                 break;
-            case GameState.BUTLER:
-                if(sInput.toLowerCase().match("run")){
-                    sReply = "The road is deserted. After 1 hour there is still no help. Do you keep Waiting or do you go to the house?";
-                    this.stateCur = GameState.FLAT;
-
-                }else{
-                    sReply = "You seem to have walked in to a party. The host offers you some toast. Do you take the toast or ask to call a tow truck?";
-                    this.stateCur = GameState.TOAST;
-    
+            case GameState.EMERGENCY:
+                if (sInput.toLowerCase().match("risk")) {
+                    sReply = "You took a risk and entered the hospital, they do an assessment and tell you they need to keep you over night. Do you STAY or ask to speak with the DOCTOR?";
+                    this.stateCur = GameState.TRIAGE;
+                } else if (sInput.toLowerCase().match("mary")) {
+                    sReply = "Mary hospital turns out to be just as busy and also wants you to stay over night. Do you STAY or ask to speak with the DOCTOR?";
+                    this.stateCur = GameState.TRIAGE;
+                } else {
+                    sReply = "Bob takes one look at your arm and passes out from the sight. That was a bad idea, do you go back to the hospital and RISK it or try to go to another hospital called MARY Hospital?";
                 }
                 break;
-            case GameState.TOAST:
-                if(sInput.toLowerCase().match("toast")){
-                    sReply = "you enter a new world of adventure ... game over";
+            case GameState.TRIAGE:
+                if (sInput.toLowerCase().match("stay")) {
+                    sReply = "Turns out your arm was badly broken and staying overnight was a good idea. The hospital takes all precautions and you do not catch COVID-19. Great Job!";
                     this.stateCur = GameState.WELCOMING;
-                }else{
-                    sReply = "the phone lines are down ... Would you like some toast perhaps?";
+                } else {
+                    sReply = "The Doctor tells you your arm doesn't look good and you should really consider staying them night. Do you STAY?";
                 }
         }
-        return([sReply]);
+        return ([sReply]);
     }
 }
